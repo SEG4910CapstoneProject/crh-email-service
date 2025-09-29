@@ -1,0 +1,63 @@
+{
+  "info": {
+    "name": "Cyber Email POC",
+    "_postman_id": "d8d9f1a6-0000-4b5e-9999-aaaaaaaaaaaa",
+    "description": "POC request to upload an HTML file and send it via SMTP using the Flask service.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Send Email",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "to",
+              "type": "text",
+              "value": "test@example.com"
+            },
+            {
+              "key": "file",
+              "type": "file",
+              "src": "sample_report.html"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:5000/send-email",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "send-email"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/health",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
