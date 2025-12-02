@@ -2,16 +2,17 @@ from flask import Flask, request, jsonify
 import smtplib, ssl, os, logging
 from email.message import EmailMessage
 from dotenv import load_dotenv
+from premailer import transform
 
 load_dotenv()
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 
-SMTP_HOST = os.getenv("SMTP_HOST", "localhost")
-SMTP_PORT = int(os.getenv("SMTP_PORT", "1025"))
-SMTP_USER = os.getenv("SMTP_USER", "")
-SMTP_PASS = os.getenv("SMTP_PASS", "")
-SMTP_FROM = os.getenv("SMTP_FROM", "reports@example.com")
+SMTP_HOST = os.getenv("SMTP_HOST")
+SMTP_PORT = int(os.getenv("SMTP_PORT"))
+SMTP_USER = os.getenv("SMTP_USER")
+SMTP_PASS = os.getenv("SMTP_PASS")
+SMTP_FROM = os.getenv("SMTP_FROM")
 USE_STARTTLS = os.getenv("USE_STARTTLS", "false").lower() == "true"
 APP_PORT = int(os.getenv("APP_PORT", "5000"))
 
@@ -27,6 +28,7 @@ def send_email():
 
     recipient = request.form["to"].strip()
     upload = request.files["file"]
+    title = request.form["subject"].strip()
 
     if not recipient or upload.filename == "":
         return jsonify({"error": "Recipient or file missing"}), 400
@@ -41,13 +43,14 @@ def send_email():
         return jsonify({"error": f"Unable to read HTML: {e}"}), 400
 
     # Build email
-    subject = f"Cyber Report Test Email"
+    subject = title
     msg = EmailMessage()
     msg["From"] = SMTP_FROM
     msg["To"] = recipient
     msg["Subject"] = subject
     msg.set_content("Your email client does not support HTML. Please view this message in an HTML-capable client.")
     msg.add_alternative(html_content, subtype="html")
+    html_content = transform(html_content)
 
     try:
         context = ssl.create_default_context()

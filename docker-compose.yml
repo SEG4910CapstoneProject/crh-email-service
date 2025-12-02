@@ -3,18 +3,20 @@ services:
     build: .
     container_name: crh-email-service
     ports:
-      - "5000:5000"
+      - "5009:5000"
     environment:
-      SMTP_HOST: mailhog
-      SMTP_PORT: "1025"
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
       SMTP_FROM: reports@example.com
-      USE_STARTTLS: "false"
-    depends_on:
-      - mailhog
+      USE_STARTTLS: "true"
+  #   depends_on:
+  #     - mailhog
 
-  mailhog:
-    image: mailhog/mailhog:v1.0.1
-    container_name: mailhog
-    ports:
-      - "1025:1025"   # SMTP port
-      - "8025:8025"   # Web UI
+  # mailhog:
+  #   image: mailhog/mailhog:v1.0.1
+  #   container_name: mailhog
+  #   ports:
+  #     - "1025:1025"   # SMTP port
+  #     - "8025:8025"   # Web UI
